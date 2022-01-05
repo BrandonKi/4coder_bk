@@ -18,7 +18,7 @@
 //
 // This custom layer has been tweaked to allow for better multi-language support
 // in 4coder. It isn't perfect and will not support all languages, but it works
-// for more than C/C++ (which historically 4coder has been fairly coupled to). 
+// for more than C/C++ (which historically 4coder has been fairly coupled to).
 //
 // List of supported languages (as of 2021/01/29):
 // - C
@@ -30,7 +30,7 @@
 // Adding a language requires a few steps.
 //
 // 1. Adding a lexer (probably the hardest part)
-// 
+//
 // 4coder comes bundled with some lexer generation things. They are hard for me
 // to understand, but all the languages I've had to deal with have been fairly
 // easy to adapt from C++'s lexer. You can take a look at 4coder_cpp_lexer_gen.cpp,
@@ -141,7 +141,7 @@
 //
 // - fleury_color_comment_user_name: The color used to highlight the
 //   username in comments.
-// 
+//
 // - fleury_color_error_annotation: Text color used for the inline error
 //   message string with F4_RenderErrorAnnotations
 
@@ -151,7 +151,7 @@
 // Many of the features in this layer are just rendering tweaks/improvements to
 // 4coder's defaults. Below is a list of features and some options for them.
 //
-// - Brace Highlighting: When the cursor is inside of a pair of {}'s, highlight 
+// - Brace Highlighting: When the cursor is inside of a pair of {}'s, highlight
 //   the brace symbols. Turn it off with "f4_disable_brace_highlight" in your
 //   config file.
 //
@@ -181,7 +181,7 @@
 // - Cursor Identifier Highlight: The Identifier under the cursor is highlighted
 //   with an underline (using the fleury_color_token_highlight color). It also
 //   highlights all other occurances of the identifier (by string) that is
-//   visible and syntax highlighted (occurances are highlighted using 
+//   visible and syntax highlighted (occurances are highlighted using
 //   "fleury_color_token_minor_highlight". Turn the highlight of other occurances
 //   off with "f4_disable_cursor_token_occurance" in your config file.
 
@@ -327,20 +327,20 @@
 //     the items in the list (rather than closing the lister), that'd be pretty much
 //     it!
 // [ ] Tabbing: This is really close, the only problem is if the end of the selection
-//     isn't at the beginning of a line it does something really weird -- I'm not sure 
+//     isn't at the beginning of a line it does something really weird -- I'm not sure
 //     what.  It shouldn't matter where the caret is, if multiple lines are selected
 //     then tab should move the lines
-// [ ] Comments: Very close!  The only problem is the multiple selection, single line 
-//     comments: instead of putting the // at the start of each line after the whitespace, 
+// [ ] Comments: Very close!  The only problem is the multiple selection, single line
+//     comments: instead of putting the // at the start of each line after the whitespace,
 //     the // should be lined up with the shallowest whitespace..
 // [ ] Pressing tab on an empty line inside a scope still doesn't do anything.
-// [X] If the caret is at the start of the line and you press home, it doesn't take you to 
-//     the first non-whitespace character... basically pressing home more than once should 
+// [X] If the caret is at the start of the line and you press home, it doesn't take you to
+//     the first non-whitespace character... basically pressing home more than once should
 //     cycle between the first non-whitespace character and column 0
 // [X] Token-like movement inside of comments.
 // [ ] ctrl E centres the buffer on the current line,  vim has z. There's:
 //     zz -> middle, zt-> top, zb->bottom, but also: z5t will centre it 5
-//     lines from the top or whatever... is that something that's easy to add? 
+//     lines from the top or whatever... is that something that's easy to add?
 //
 // ORIGINAL REQUEST:
 // [ ] Fix not showing .-lister when cursor is at end of query
@@ -454,7 +454,7 @@ void custom_layer_init(Application_Links *app)
     default_framework_init(app);
     global_frame_arena = make_arena(get_base_allocator_system());
     permanent_arena = make_arena(get_base_allocator_system());
-    
+
     // NOTE(rjf): Set up hooks.
     {
         set_all_default_hooks(app);
@@ -467,7 +467,7 @@ void custom_layer_init(Application_Links *app)
         set_custom_hook(app, HookID_BufferEditRange,         F4_BufferEditRange);
         set_custom_hook_memory_size(app, HookID_DeltaRule, delta_ctx_size(sizeof(Vec2_f32)));
     }
-    
+
     // NOTE(rjf): Set up mapping.
     {
         Thread_Context *tctx = get_thread_context(app);
@@ -480,12 +480,12 @@ void custom_layer_init(Application_Links *app)
         }
         F4_SetAbsolutelyNecessaryBindings(&framework_mapping);
     }
-    
+
     // NOTE(rjf): Set up custom code index.
     {
         F4_Index_Initialize();
     }
-    
+
     // NOTE(rjf): Register languages.
     {
         F4_RegisterLanguages();
@@ -515,18 +515,18 @@ CUSTOM_COMMAND_SIG(fleury_startup)
 CUSTOM_DOC("Fleury startup event")
 {
     ProfileScope(app, "default startup");
-    
+
     User_Input input = get_current_input(app);
     if(!match_core_code(&input, CoreCode_Startup))
     {
         return;
     }
-    
+
     //~ NOTE(rjf): Default 4coder initialization.
     String_Const_u8_Array file_names = input.event.core.file_names;
     load_themes_default_folder(app);
     default_4coder_initialize(app, file_names);
-    
+
     //~ NOTE(rjf): Open special buffers.
     {
         // NOTE(rjf): Open compilation buffer.
@@ -537,7 +537,7 @@ CUSTOM_DOC("Fleury startup event")
             buffer_set_setting(app, buffer, BufferSetting_Unimportant, true);
             buffer_set_setting(app, buffer, BufferSetting_ReadOnly, true);
         }
-                        
+
         // NOTE(rjf): Open peek buffer.
         {
             Buffer_ID buffer = create_buffer(app, string_u8_litexpr("*peek*"),
@@ -545,7 +545,7 @@ CUSTOM_DOC("Fleury startup event")
                                              BufferCreate_AlwaysNew);
             buffer_set_setting(app, buffer, BufferSetting_Unimportant, true);
         }
-        
+
         // NOTE(rjf): Open LOC buffer.
         {
             Buffer_ID buffer = create_buffer(app, string_u8_litexpr("*loc*"),
@@ -554,47 +554,19 @@ CUSTOM_DOC("Fleury startup event")
             buffer_set_setting(app, buffer, BufferSetting_Unimportant, true);
         }
     }
-    
+
     //~ NOTE(rjf): Initialize panels
     {
-        Buffer_Identifier comp = buffer_identifier(string_u8_litexpr("*compilation*"));
-        Buffer_Identifier left  = buffer_identifier(string_u8_litexpr("*scratch*"));
-        Buffer_Identifier right = buffer_identifier(string_u8_litexpr("*messages*"));
-        Buffer_ID comp_id = buffer_identifier_to_id(app, comp);
+        Buffer_Identifier left = buffer_identifier(string_u8_litexpr("*messages*"));
         Buffer_ID left_id = buffer_identifier_to_id(app, left);
-        Buffer_ID right_id = buffer_identifier_to_id(app, right);
-        
-        // NOTE(rjf): Left Panel
+
         View_ID view = get_active_view(app, Access_Always);
         new_view_settings(app, view);
         view_set_buffer(app, view, left_id, 0);
-        
-        // NOTE(rjf): Bottom panel
-        View_ID compilation_view = 0;
-        {
-            compilation_view = open_view(app, view, ViewSplit_Bottom);
-            new_view_settings(app, compilation_view);
-            Buffer_ID buffer = view_get_buffer(app, compilation_view, Access_Always);
-            Face_ID face_id = get_face_id(app, buffer);
-            Face_Metrics metrics = get_face_metrics(app, face_id);
-            view_set_split_pixel_size(app, compilation_view, (i32)(metrics.line_height*4.f));
-            view_set_passive(app, compilation_view, true);
-            global_compilation_view = compilation_view;
-            view_set_buffer(app, compilation_view, comp_id, 0);
-        }
-        
-        view_set_active(app, view);
-        
-        // NOTE(rjf): Right Panel
-        open_panel_vsplit(app);
-        
-        View_ID right_view = get_active_view(app, Access_Always);
-        view_set_buffer(app, right_view, right_id, 0);
-        
-        // NOTE(rjf): Restore Active to Left
+
         view_set_active(app, view);
     }
-    
+
     //~ NOTE(rjf): Auto-Load Project.
     {
         b32 auto_load = def_get_config_b32(vars_save_string_lit("automatically_load_project"));
@@ -603,12 +575,12 @@ CUSTOM_DOC("Fleury startup event")
             load_project(app);
         }
     }
-    
+
     //~ NOTE(rjf): Set misc options.
     {
         global_battery_saver = def_get_config_b32(vars_save_string_lit("f4_battery_saver"));
     }
-    
+
     //~ NOTE(rjf): Initialize bindings.
     {
         String_Const_u8 bindings_file = string_u8_litexpr("bindings.4coder");
@@ -619,15 +591,15 @@ CUSTOM_DOC("Fleury startup event")
         }
         F4_SetAbsolutelyNecessaryBindings(&framework_mapping);
     }
-    
+
     //~ NOTE(rjf): Initialize stylish fonts.
     {
         Scratch_Block scratch(app);
         String_Const_u8 bin_path = system_get_path(scratch, SystemPath_Binary);
-        
+
         // NOTE(rjf): Fallback font.
         Face_ID face_that_should_totally_be_there = get_face_id(app, 0);
-        
+
         // NOTE(rjf): Title font.
         {
             Face_Description desc = {0};
@@ -638,7 +610,7 @@ CUSTOM_DOC("Fleury startup event")
                 desc.parameters.italic = 0;
                 desc.parameters.hinting = 0;
             }
-            
+
             if(IsFileReadable(desc.font.file_name))
             {
                 global_styled_title_face = try_create_new_face(app, &desc);
@@ -648,7 +620,7 @@ CUSTOM_DOC("Fleury startup event")
                 global_styled_title_face = face_that_should_totally_be_there;
             }
         }
-        
+
         // NOTE(rjf): Label font.
         {
             Face_Description desc = {0};
@@ -659,7 +631,7 @@ CUSTOM_DOC("Fleury startup event")
                 desc.parameters.italic = 1;
                 desc.parameters.hinting = 0;
             }
-            
+
             if(IsFileReadable(desc.font.file_name))
             {
                 global_styled_label_face = try_create_new_face(app, &desc);
@@ -671,11 +643,11 @@ CUSTOM_DOC("Fleury startup event")
                 global_styled_label_face = face_that_should_totally_be_there;
             }
         }
-        
+
         // NOTE(rjf): Small code font.
         {
             Face_Description normal_code_desc = get_face_description(app, get_face_id(app, 0));
-            
+
             Face_Description desc = {0};
             {
                 desc.font.file_name =  push_u8_stringf(scratch, "%.*sfonts/Inconsolata-Regular.ttf", string_expand(bin_path));
@@ -684,7 +656,7 @@ CUSTOM_DOC("Fleury startup event")
                 desc.parameters.italic = 1;
                 desc.parameters.hinting = 0;
             }
-            
+
             if(IsFileReadable(desc.font.file_name))
             {
                 global_small_code_face = try_create_new_face(app, &desc);
@@ -695,7 +667,7 @@ CUSTOM_DOC("Fleury startup event")
             }
         }
     }
-    
+
     //~ NOTE(rjf): Prep virtual whitespace.
     {
         def_enable_virtual_whitespace = def_get_config_b32(vars_save_string_lit("enable_virtual_whitespace"));
